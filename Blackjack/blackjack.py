@@ -35,69 +35,36 @@ def load_score(filename="scores.txt"):
 '''
 
 def bet(starting_amount):
-    
-    bet_amount = 0
-    
-    while True:
-        
-        current_bet = input(f"How much do you want to bet? \nYou have {starting_amount} left.\n You have bet {bet_amount}.\n Type 'exit' if you are done.\n ") #Might be wasteful
-        
-        if current_bet == "exit":
-            return bet_amount
-        elif current_bet == "1" or current_bet == "5" or current_bet == "100" or current_bet == "500":
-            current_bet = int(current_bet)
-        else:
-            print("Think you've typed wrong")
-            
-        match current_bet:
-            case 1 if starting_amount - current_bet > 0:
-                bet_amount += current_bet
-                starting_amount -= current_bet
-                continue
-            case 5 if starting_amount - current_bet > 0:
-                bet_amount += current_bet
-                starting_amount -= current_bet
-                continue
-            case 100 if starting_amount - current_bet > 0:
-                bet_amount += current_bet
-                starting_amount -= current_bet
-                continue
-            case 500 if starting_amount - current_bet > 0:
-                bet_amount += current_bet
-                starting_amount -= current_bet
-                continue
-            case _:
-                print("Think you must've typed wrong")
-                continue
-                
-                
-                
-                
-    
-def bet_menu(starting_amount):
-    
-    bet_amount = 0
-    
-    while starting_amount > 0:
+   allowed_bets = {1, 5, 100, 500}
+   
+   bet = 0
+   
+   while True:
         current_bet = 0
-        
-        choice = input(f"Welcome to Blackjack! Type 'bet' to bet or Type 'start' to start game or Type 'exit' to leave. \nMoney left : {starting_amount} \nMoney bet: {bet_amount}\n")
-        if choice == "start" and bet_amount == 0:
+        user_input =  input(f"Money Remaining: {starting_amount} \nPlace your bet (1, 5, 100, 500) or type 'exit' to quit or type 'start' to start the game: ").strip().lower()
+       
+        if user_input == "start" and bet == 0 :
             print("Invalid. You haven't bet anything.")
             continue
-        elif choice == "bet":
-            current_bet = bet(starting_amount)
-            starting_amount -= current_bet
-            bet_amount += current_bet
-        elif choice == "start":
-            return bet_amount
-        elif choice == "exit":
+        elif user_input == "start":
+            print("Exiting the betting system. Time to play!!")
+            return starting_amount
+        elif user_input == "exit":
+            print("Exiting the game. Thanks for playing!")
             return "exit"
-        else:
-            print("Invalid. You didn't choose one of the following choices.")
-            continue
-            
-        
+       
+        try:
+            current_bet = int(user_input)
+            print(current_bet)
+            if current_bet in allowed_bets:
+                print(f"You have bet {current_bet}.")
+                bet += current_bet
+                
+            else:
+                print(f"Invalid bet amount. Please choose from {allowed_bets}.") 
+        except ValueError:
+            print("Invalid input. Please enter a number (1, 5, 100, 500) or 'exit'.")
+         
 def hit():
     return rd.choice(cards)
 
@@ -165,7 +132,7 @@ def main():
     money_brought = 2500
    
     while money_brought > 0:
-        bet_money = bet_menu(money_brought) 
+        bet_money = bet(money_brought) 
         
         if bet_money == "exit":
             break
