@@ -1,10 +1,18 @@
 import tkinter as tk
+import os
+
 from tkinter import ttk
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = dir_path.replace("\\", "/")
+DIRECTORY_NAME = dir_path
+
+
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Apple")
+        self.title("CaesarCipher")
         self.geometry("1200x800")
         
         
@@ -70,7 +78,7 @@ class App(tk.Tk):
         choice = self.current_mode.get()
         number_to_shift = self.shift_number.get()
     
-        word = self.text_box.get("1.0", tk.END)
+        word = self.text_box.get("1.0", "end-1c")
     
         if choice == "decode":
             number_to_shift *= -1
@@ -92,13 +100,25 @@ class App(tk.Tk):
         self.display_box.delete(1.0, tk.END)
         self.display_box.insert(1.0,new_word)
         self.display_box.config(state="disabled")
+        with open(f"{DIRECTORY_NAME}/cc_temp_data.txt", "a") as f:
+            self.history_log = {
+                "input" : word,
+                "output" : new_word,
+                "choice" : choice,
+            }
+            f.write(f"\n{str(self.history_log)}")       
         
+def on_closing():
+    if os.path.exists(f"{DIRECTORY_NAME}/cc_temp_data.txt"):
+        os.remove(f"{DIRECTORY_NAME}/cc_temp_data.txt") 
         
-
+    app.destroy()
+        
 
 if __name__ == "__main__":
     app = App()
+    
+    app.protocol("WM_DELETE_WINDOW", on_closing)
     app.mainloop() 
-        
         
         
